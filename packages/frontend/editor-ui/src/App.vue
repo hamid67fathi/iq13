@@ -97,6 +97,7 @@ watch(
 	<div
 		v-else
 		id="n8n-app"
+		dir="rtl"
 		:class="{
 			[$style.container]: true,
 			[$style.sidebarCollapsed]: uiStore.sidebarMenuCollapsed,
