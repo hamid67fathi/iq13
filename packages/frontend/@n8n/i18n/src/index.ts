@@ -392,17 +392,20 @@ export async function loadLanguage(language: string) {
 		return await setLanguage(language);
 	}
 
-	const { numberFormats, ...rest } = (await import(`@n8n/i18n/locales/${language}.json`)).default;
+	try {
+		const { numberFormats, ...rest } = (await import(`@n8n/i18n/locales/${language}.json`)).default;
+		i18nInstance.global.setLocaleMessage(language, rest);
 
-	i18nInstance.global.setLocaleMessage(language, rest);
+		if (numberFormats) {
+			i18nInstance.global.setNumberFormat(language, numberFormats);
+		}
 
-	if (numberFormats) {
-		i18nInstance.global.setNumberFormat(language, numberFormats);
+		loadedLanguages.push(language);
+		return await setLanguage(language);
+	} catch (error) {
+		console.warn(`Failed to load language ${language}, falling back to English`);
+		return await setLanguage('en');
 	}
-
-	loadedLanguages.push(language);
-
-	return await setLanguage(language);
 }
 
 /**
